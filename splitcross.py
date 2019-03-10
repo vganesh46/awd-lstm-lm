@@ -5,6 +5,7 @@ import torch.nn as nn
 
 import numpy as np
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 class SplitCrossEntropyLoss(nn.Module):
     r'''SplitCrossEntropyLoss calculates an approximate softmax'''
@@ -190,7 +191,7 @@ if __name__ == '__main__':
         x = torch.autograd.Variable((torch.rand(N, 1) * 0.999 * V).int().long())
         y = embed(prev).squeeze()
         c = crit(embed.weight, bias, y, x.view(N))
-        print('Crit', c.exp().data[0])
+        print('Crit', c.exp().item())
 
         logprobs = crit.logprob(embed.weight, bias, y[:2]).exp()
         print(logprobs)

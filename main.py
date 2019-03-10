@@ -10,6 +10,8 @@ import model
 
 from utils import batchify, get_batch, repackage_hidden
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
 parser = argparse.ArgumentParser(description='PyTorch PennTreeBank RNN/LSTM Language Model')
 parser.add_argument('--data', type=str, default='data/penn/',
                     help='location of the data corpus')
@@ -141,8 +143,8 @@ if not criterion:
     criterion = SplitCrossEntropyLoss(args.emsize, splits=splits, verbose=False)
 ###
 if args.cuda:
-    model = model.cuda()
-    criterion = criterion.cuda()
+    model = model.to(device)
+    criterion = criterion.to(device)
 ###
 params = list(model.parameters()) + list(criterion.parameters())
 total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[0] for x in params if x.size())

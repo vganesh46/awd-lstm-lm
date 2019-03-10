@@ -1,2 +1,6 @@
 *.pt
 __pycache__/
+data/
+marchbox/
+corpus.*.data
+.DS_Store

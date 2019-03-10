@@ -8,7 +8,7 @@ from torch.autograd import Variable
 
 import data
 import model
-
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 from utils import batchify, get_batch, repackage_hidden
 
 parser = argparse.ArgumentParser(description='PyTorch PennTreeBank RNN/LSTM Language Model')

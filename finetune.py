@@ -11,6 +11,8 @@ import model
 
 from utils import batchify, get_batch, repackage_hidden
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
 parser = argparse.ArgumentParser(description='PyTorch PennTreeBank RNN/LSTM Language Model')
 parser.add_argument('--data', type=str, default='data/penn/',
                     help='location of the data corpus')
@@ -90,7 +92,7 @@ test_data = batchify(corpus.test, test_batch_size, args)
 ntokens = len(corpus.dictionary)
 model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.dropouth, args.dropouti, args.dropoute, args.wdrop, args.tied)
 if args.cuda:
-    model.cuda()
+    model.to(device)
 total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[0] for x in model.parameters())
 print('Args:', args)
 print('Model total parameters:', total_params)

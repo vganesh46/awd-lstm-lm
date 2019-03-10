@@ -1,6 +1,6 @@
 import torch
 
-
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 def repackage_hidden(h):
     """Wraps hidden states in new Tensors,
     to detach them from their history."""
@@ -18,7 +18,7 @@ def batchify(data, bsz, args):
     # Evenly divide the data across the bsz batches.
     data = data.view(bsz, -1).t().contiguous()
     if args.cuda:
-        data = data.cuda()
+        data = data.to(device)
     return data
 
 
