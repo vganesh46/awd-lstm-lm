@@ -175,8 +175,13 @@ def train():
 
 
 # Load the best saved model.
-with open(args.save, 'rb') as f:
-    model = torch.load(f)
+
+def model_load(fn):
+    global model, criterion, optimizer
+    with open(fn, 'rb') as f:
+        model, criterion, optimizer = torch.load(f)
+        
+model_load(args.save)
 
 
 # Loop over epochs.
