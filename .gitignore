@@ -4,3 +4,4 @@ data/
 marchbox/
 corpus.*.data
 .DS_Store
+.vscode/
