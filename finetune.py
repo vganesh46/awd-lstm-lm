@@ -70,7 +70,7 @@ args = parser.parse_args()
 torch.manual_seed(args.seed)
 if torch.cuda.is_available():
     if not args.cuda:
-        print("WARNING: You have a CUDA device, so you should probably run with --cuda")
+        logging.info("WARNING: You have a CUDA device, so you should probably run with --cuda")
     else:
         torch.cuda.manual_seed(args.seed)
 
@@ -95,8 +95,8 @@ model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers
 if args.cuda and torch.cuda.is_available():
     model.to(device)
 total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[0] for x in model.parameters())
-print('Args:', args)
-print('Model total parameters:', total_params)
+logging.info('Args:', args)
+logging.info('Model total parameters:', total_params)
 
 criterion = nn.CrossEntropyLoss()
 
@@ -170,7 +170,7 @@ def train():
         if batch % args.log_interval == 0 and batch > 0:
             cur_loss = total_loss.item() / args.log_interval
             elapsed = time.time() - start_time
-            print('| epoch {:3d} | {:5d}/{:5d} batches | lr {:02.2f} | ms/batch {:5.2f} | '
+            logging.info('| epoch {:3d} | {:5d}/{:5d} batches | lr {:02.2f} | ms/batch {:5.2f} | '
                     'loss {:5.2f} | ppl {:8.2f}'.format(
                 epoch, batch, len(train_data) // args.bptt, optimizer.param_groups[0]['lr'],
                 elapsed * 1000 / args.log_interval, cur_loss, math.exp(cur_loss)))
@@ -210,23 +210,23 @@ try:
                     prm.data = optimizer.state[prm]['ax'].clone()
 
             val_loss2 = evaluate(val_data)
-            print('-' * 89)
-            print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '
+            logging.info('-' * 89)
+            logging.info('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '
                     'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time),
                                                val_loss2, math.exp(val_loss2)))
-            print('-' * 89)
+            logging.info('-' * 89)
 
             if val_loss2 < stored_loss:
                 with open(args.save, 'wb') as f:
                     torch.save(model, f)
-                print('Saving Averaged!')
+                logging.info('Saving Averaged!')
                 stored_loss = val_loss2
 
             for prm in model.parameters():
                 prm.data = tmp[prm].clone()
 
         if (len(best_val_loss)>args.nonmono and val_loss2 > min(best_val_loss[:-args.nonmono])):
-            print('Done!')
+            logging.info('Done!')
             import sys
             sys.exit(1)
             optimizer = torch.optim.ASGD(model.parameters(), lr=args.lr, t0=0, lambd=0., weight_decay=args.wdecay)
@@ -234,8 +234,8 @@ try:
         best_val_loss.append(val_loss2)
 
 except KeyboardInterrupt:
-    print('-' * 89)
-    print('Exiting from training early')
+    logging.info('-' * 89)
+    logging.info('Exiting from training early')
 
 # Load the best saved model.
 def model_load(fn):
@@ -247,7 +247,7 @@ model_load(args.save)
     
 # Run on test data.
 test_loss = evaluate(test_data, test_batch_size)
-print('=' * 89)
-print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(
+logging.info('=' * 89)
+logging.info('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(
     test_loss, math.exp(test_loss)))
-print('=' * 89)
+logging.info('=' * 89)

@@ -107,8 +107,8 @@ class SplitCrossEntropyLoss(nn.Module):
     def forward(self, weight, bias, hiddens, targets, verbose=False):
         if self.verbose or verbose:
             for idx in sorted(self.stats):
-                print('{}: {}'.format(idx, int(np.mean(self.stats[idx]))), end=', ')
-            print()
+                logging.info('{}: {}'.format(idx, int(np.mean(self.stats[idx]))), end=', ')
+            logging.info()
 
         total_loss = None
         if len(hiddens.size()) > 2: hiddens = hiddens.view(-1, hiddens.size(2))

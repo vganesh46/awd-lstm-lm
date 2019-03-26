@@ -5,3 +5,4 @@ marchbox/
 corpus.*.data
 .DS_Store
 .vscode/
+*.log

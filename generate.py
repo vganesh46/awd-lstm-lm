@@ -39,7 +39,7 @@ args = parser.parse_args()
 torch.manual_seed(args.seed)
 if torch.cuda.is_available():
     if not args.cuda:
-        print("WARNING: You have a CUDA device, so you should probably run with --cuda")
+        logging.info("WARNING: You have a CUDA device, so you should probably run with --cuda")
     else:
         torch.cuda.manual_seed(args.seed)
 
@@ -75,4 +75,4 @@ with open(args.outf, 'w') as outf:
         outf.write(word + ('\n' if i % 20 == 19 else ' '))
 
         if i % args.log_interval == 0:
-            print('| Generated {}/{} words'.format(i, args.words))
+            logging.info('| Generated {}/{} words'.format(i, args.words))
