@@ -29,7 +29,7 @@ parser.add_argument('--lr', type=float, default=30,
                     help='initial learning rate')
 parser.add_argument('--clip', type=float, default=0.25,
                     help='gradient clipping')
-parser.add_argument('--epochs', type=int, default=8000,
+parser.add_argument('--epochs', type=int, default=1,
                     help='upper epoch limit')
 parser.add_argument('--batch_size', type=int, default=80, metavar='N',
                     help='batch size')
@@ -141,7 +141,7 @@ if not criterion:
     elif ntokens > 75000:
         # WikiText-103
         splits = [2800, 20000, 76000]
-    logging.info('Using', splits)
+    logging.info(f'Using {splits}')
     criterion = SplitCrossEntropyLoss(args.emsize, splits=splits, verbose=False)
 ###
 if args.cuda:
@@ -150,8 +150,8 @@ if args.cuda:
 ###
 params = list(model.parameters()) + list(criterion.parameters())
 total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[0] for x in params if x.size())
-logging.info('Args:', args)
-logging.info('Model total parameters:', total_params)
+logging.info(f'Args: {args}')
+logging.info(f'Model total parameters:{total_params}')
 
 ###############################################################################
 # Training code
