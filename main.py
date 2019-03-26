@@ -8,8 +8,7 @@ import logging
 import data
 import model
 
-logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
-
+logging.basicConfig(filename='app.log', filemode='w',level=logging.INFO)
 
 from utils import batchify, get_batch, repackage_hidden
 
